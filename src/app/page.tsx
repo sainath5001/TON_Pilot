@@ -1,6 +1,7 @@
 import { Container } from "@/components/layout/Container";
 import { AppHeader } from "@/components/layout/AppHeader";
-import { AISwapAssistant } from "@/components/swap/AISwapAssistant";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
 
 export default function Home() {
   return (
@@ -14,12 +15,29 @@ export default function Home() {
               TON Pilot
             </h1>
             <p className="mt-4 text-pretty text-base text-white/70 md:text-lg">
-              Production-ready MVP starter: clean UI, modular code, and room for your AI Swap Assistant.
+              Two hackathon features: AI Swap Assistant and Limit Orders (local-only) with a clean DeFi UI.
             </p>
           </div>
 
-          <div className="mt-10">
-            <AISwapAssistant />
+          <div className="mx-auto mt-10 grid max-w-4xl gap-4 md:grid-cols-2">
+            <Card>
+              <Card.Title>AI Swap Assistant</Card.Title>
+              <Card.Description>Connect Tonkeeper, analyze a swap, and prepare a STON.fi transaction.</Card.Description>
+              <div className="mt-4">
+                <Button href="/swap" variant="secondary">
+                  Open Swap Assistant
+                </Button>
+              </div>
+            </Card>
+            <Card>
+              <Card.Title>Limit Orders</Card.Title>
+              <Card.Description>Create target-price orders stored in localStorage (no blockchain yet).</Card.Description>
+              <div className="mt-4">
+                <Button href="/limit-orders" variant="secondary">
+                  Open Limit Orders
+                </Button>
+              </div>
+            </Card>
           </div>
         </Container>
       </main>
