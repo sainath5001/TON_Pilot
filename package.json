@@ -9,6 +9,10 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@ston-fi/api": "^0.32.0",
+    "@ston-fi/sdk": "^2.7.0",
+    "@ton/ton": "^16.2.4",
+    "@tonconnect/ui-react": "^2.4.4",
     "next": "^16.2.4",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
@@ -23,7 +27,7 @@
     "eslint-plugin-react": "^7.37.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "tailwindcss": "^4.1.12",
-    "typescript-eslint": "^8.46.0",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.46.0"
   }
 }
