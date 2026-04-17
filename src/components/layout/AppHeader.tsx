@@ -24,6 +24,9 @@ export function AppHeader() {
             <Link className="hover:text-white" href="/limit-orders">
               Limit Orders
             </Link>
+            <Link className="hover:text-white" href="/liquidity-advisor">
+              Liquidity Advisor
+            </Link>
             <a className="hover:text-white" href="https://ston.fi" target="_blank" rel="noreferrer">
               STON.fi
             </a>
