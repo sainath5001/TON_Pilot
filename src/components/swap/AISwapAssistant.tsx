@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { TonConnectButton, useTonAddress, useTonConnectUI } from "@tonconnect/ui-react";
+import { TonConnectButton, useTonAddress, useTonConnectUI, useTonWallet } from "@tonconnect/ui-react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { TokenSelector } from "@/components/swap/TokenSelector";
@@ -20,6 +20,7 @@ function assetDecimals(a: StonfiAsset | null) {
 
 export function AISwapAssistant() {
   const walletAddress = useTonAddress();
+  const wallet = useTonWallet();
   const [tonConnectUI] = useTonConnectUI();
 
   const [assets, setAssets] = useState<StonfiAsset[] | null>(null);
@@ -30,6 +31,8 @@ export function AISwapAssistant() {
   const [analyzing, setAnalyzing] = useState(false);
   const [result, setResult] = useState<SwapRecommendation | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [aiMode, setAiMode] = useState<"ai" | "fallback" | null>(null);
+  const [aiDebug, setAiDebug] = useState<string | null>(null);
 
   const [buildingTx, setBuildingTx] = useState(false);
 
@@ -63,6 +66,8 @@ export function AISwapAssistant() {
   async function onAnalyze() {
     setError(null);
     setResult(null);
+    setAiMode(null);
+    setAiDebug(null);
     setAnalyzing(true);
     try {
       if (!fromAsset || !toAsset) throw new Error("Assets not loaded yet.");
@@ -83,13 +88,28 @@ export function AISwapAssistant() {
         throw new Error(msg || "Analyze failed");
       }
 
-      const data = (await res.json()) as { recommendation: "Swap now" | "Wait"; confidence: "High" | "Medium" | "Low"; reason: string };
+      const data = (await res.json()) as {
+        recommendation: "Swap now" | "Wait";
+        confidence: "High" | "Medium" | "Low";
+        reason: string;
+        mode?: "ai" | "fallback";
+        debug?: { status?: number; code?: string; message?: string };
+      };
 
       setResult({
         action: data.recommendation === "Swap now" ? "swap" : "wait",
         confidence: data.confidence,
         reason: data.reason
       });
+
+      setAiMode(data.mode ?? null);
+      if (data.mode === "fallback" && data.debug) {
+        const parts = [
+          data.debug.status ? `status=${data.debug.status}` : null,
+          data.debug.code ? `code=${data.debug.code}` : null
+        ].filter(Boolean);
+        setAiDebug(parts.length ? `OpenAI error (${parts.join(", ")}). Add credits/billing or use a key with quota.` : null);
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Analyze failed");
     } finally {
@@ -99,6 +119,7 @@ export function AISwapAssistant() {
 
   async function onSwap() {
     setError(null);
+    let step: "build" | "wallet" | "idle" = "idle";
     if (!walletAddress) {
       setError("Connect your wallet first.");
       return;
@@ -114,6 +135,7 @@ export function AISwapAssistant() {
 
     setBuildingTx(true);
     try {
+      step = "build";
       const tx = await buildSwapTx({
         walletAddress,
         offerAddress: fromAsset.contractAddress,
@@ -122,9 +144,17 @@ export function AISwapAssistant() {
         slippageTolerance: "0.01"
       });
 
+      step = "wallet";
       await tonConnectUI.sendTransaction(tx);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Swap failed");
+      const msg = e instanceof Error ? e.message : "Swap failed";
+      const prefix =
+        step === "build"
+          ? "Swap (build tx) failed: "
+          : step === "wallet"
+            ? "Swap (wallet) failed: "
+            : "Swap failed: ";
+      setError(prefix + msg);
     } finally {
       setBuildingTx(false);
     }
@@ -177,9 +207,18 @@ export function AISwapAssistant() {
         </Button>
       </div>
 
+      <div className="mt-4 text-xs text-white/50">
+        Wallet: {wallet ? "connected" : "not connected"}
+      </div>
+
       {result && (
         <div className="mt-5">
           <ResultCard result={result} />
+          {aiMode === "fallback" && (
+            <div className="mt-2 text-xs text-white/50">
+              AI mode: fallback. {aiDebug ?? "OpenAI request failed (check key/quota) — showing a deterministic result."}
+            </div>
+          )}
         </div>
       )}
     </Card>

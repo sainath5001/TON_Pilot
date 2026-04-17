@@ -18,6 +18,29 @@ function deriveMarketSignals(tokenFrom: string, tokenTo: string, amount: string)
   return { priceTrend: "stable" as const, volatility: "medium" as const };
 }
 
+function fallbackAnalysis(input: { tokenFrom: string; tokenTo: string; amount: string }) {
+  const amt = Number(input.amount);
+  const hasAmount = Number.isFinite(amt) && amt > 0;
+  const recommendation = hasAmount ? ("Swap now" as const) : ("Wait" as const);
+  return {
+    recommendation,
+    confidence: hasAmount ? ("Low" as const) : ("Low" as const),
+    reason: hasAmount
+      ? `AI is temporarily unavailable, so this is a fallback suggestion. Confirm slippage and price before swapping ${input.tokenFrom} → ${input.tokenTo}.`
+      : "Enter a valid amount to analyze."
+  };
+}
+
+function pickOpenAiError(e: unknown): { status?: number; code?: string; message?: string } {
+  if (!e || typeof e !== "object") return {};
+  const anyErr = e as { status?: number; code?: string; message?: string; error?: { code?: string; message?: string } };
+  return {
+    status: typeof anyErr.status === "number" ? anyErr.status : undefined,
+    code: anyErr.code ?? anyErr.error?.code,
+    message: anyErr.message ?? anyErr.error?.message
+  };
+}
+
 export async function POST(req: NextRequest) {
   const body = (await req.json().catch(() => null)) as Body | null;
   if (!body) return new Response("Invalid JSON body", { status: 400 });
@@ -37,15 +60,27 @@ export async function POST(req: NextRequest) {
     `Should the user swap now or wait?\n` +
     `Respond ONLY in JSON with fields: recommendation ("Swap now" or "Wait"), confidence ("High"|"Medium"|"Low"), reason (short).\n`;
 
-  const client = getOpenAIClient();
+  let responseText: string | null = null;
+  try {
+    const client = getOpenAIClient();
+    const response = await client.responses.create({
+      model: "gpt-4o-mini",
+      input: prompt
+    });
+    responseText = response.output_text?.trim() ?? null;
+  } catch (e: unknown) {
+    // Keep the app usable for hackathon demos:
+    // - missing key
+    // - quota / rate limits
+    // - transient network errors
+    // Always return the requested JSON shape.
+    const fallback = fallbackAnalysis({ tokenFrom, tokenTo, amount });
+    const debug = process.env.NODE_ENV !== "production" ? pickOpenAiError(e) : undefined;
+    return Response.json({ ...fallback, mode: "fallback", debug });
+  }
 
-  const response = await client.responses.create({
-    model: "gpt-4o-mini",
-    input: prompt
-  });
-
-  const text = response.output_text?.trim() ?? "";
-  if (!text) return new Response("Empty AI response", { status: 502 });
+  const text = responseText ?? "";
+  if (!text) return Response.json({ ...fallbackAnalysis({ tokenFrom, tokenTo, amount }), mode: "fallback" });
 
   let parsed: unknown;
   try {
@@ -74,6 +109,6 @@ export async function POST(req: NextRequest) {
     return new Response("AI returned unexpected JSON shape", { status: 502 });
   }
 
-  return Response.json({ recommendation, confidence, reason });
+  return Response.json({ recommendation, confidence, reason, mode: "ai" });
 }
 
