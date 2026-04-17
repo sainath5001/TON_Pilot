@@ -15,11 +15,11 @@ export default function Home() {
               TON Pilot
             </h1>
             <p className="mt-4 text-pretty text-base text-white/70 md:text-lg">
-              Hackathon features: AI Swap Assistant, Limit Orders, and AI Liquidity Advisor with a clean DeFi UI.
+              Hackathon features: Swap Assistant, Limit Orders, Liquidity Advisor, and Smart Alerts.
             </p>
           </div>
 
-          <div className="mx-auto mt-10 grid max-w-5xl gap-4 md:grid-cols-3">
+          <div className="mx-auto mt-10 grid max-w-6xl gap-4 md:grid-cols-4">
             <Card>
               <Card.Title>AI Swap Assistant</Card.Title>
               <Card.Description>Connect Tonkeeper, analyze a swap, and prepare a STON.fi transaction.</Card.Description>
@@ -44,6 +44,15 @@ export default function Home() {
               <div className="mt-4">
                 <Button href="/liquidity-advisor" variant="secondary">
                   Open Liquidity Advisor
+                </Button>
+              </div>
+            </Card>
+            <Card>
+              <Card.Title>Smart Alerts</Card.Title>
+              <Card.Description>Enable alerts and set thresholds (saved to localStorage).</Card.Description>
+              <div className="mt-4">
+                <Button href="/smart-alerts" variant="secondary">
+                  Open Smart Alerts
                 </Button>
               </div>
             </Card>

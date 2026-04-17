@@ -26,6 +26,11 @@ export function useLocalStorageState<T>(key: string, initialValue: T) {
     }
   }, [key, value, hydrated]);
 
-  return { value, setValue, hydrated } as const;
+  // Support both direct values and functional updates.
+  function setValueSafe(next: T | ((prev: T) => T)) {
+    setValue((prev) => (typeof next === "function" ? (next as (p: T) => T)(prev) : next));
+  }
+
+  return { value, setValue: setValueSafe, hydrated } as const;
 }
 
