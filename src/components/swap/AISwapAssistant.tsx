@@ -65,16 +65,30 @@ export function AISwapAssistant() {
     setResult(null);
     setAnalyzing(true);
     try {
-      // Mocked AI result for now (per prompt)
-      await new Promise((r) => setTimeout(r, 900));
-      const action: SwapRecommendation["action"] = Number(amount || "0") > 0 ? "swap" : "wait";
+      if (!fromAsset || !toAsset) throw new Error("Assets not loaded yet.");
+      if (!amount) throw new Error("Enter an amount to analyze.");
+
+      const res = await fetch("/api/analyze-swap", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          tokenFrom: assetLabel(fromAsset),
+          tokenTo: assetLabel(toAsset),
+          amount
+        })
+      });
+
+      if (!res.ok) {
+        const msg = await res.text().catch(() => "");
+        throw new Error(msg || "Analyze failed");
+      }
+
+      const data = (await res.json()) as { recommendation: "Swap now" | "Wait"; confidence: "High" | "Medium" | "Low"; reason: string };
+
       setResult({
-        action,
-        confidence: action === "swap" ? "Medium" : "Low",
-        reason:
-          action === "swap"
-            ? "Liquidity looks adequate for this pair; you can proceed and keep slippage tight."
-            : "Enter a valid amount to analyze. (AI logic will be added later.)"
+        action: data.recommendation === "Swap now" ? "swap" : "wait",
+        confidence: data.confidence,
+        reason: data.reason
       });
     } catch (e) {
       setError(e instanceof Error ? e.message : "Analyze failed");
