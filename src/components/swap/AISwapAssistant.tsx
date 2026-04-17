@@ -31,8 +31,6 @@ export function AISwapAssistant() {
   const [analyzing, setAnalyzing] = useState(false);
   const [result, setResult] = useState<SwapRecommendation | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [aiMode, setAiMode] = useState<"ai" | "fallback" | null>(null);
-  const [aiDebug, setAiDebug] = useState<string | null>(null);
 
   const [buildingTx, setBuildingTx] = useState(false);
 
@@ -66,8 +64,6 @@ export function AISwapAssistant() {
   async function onAnalyze() {
     setError(null);
     setResult(null);
-    setAiMode(null);
-    setAiDebug(null);
     setAnalyzing(true);
     try {
       if (!fromAsset || !toAsset) throw new Error("Assets not loaded yet.");
@@ -92,8 +88,6 @@ export function AISwapAssistant() {
         recommendation: "Swap now" | "Wait";
         confidence: "High" | "Medium" | "Low";
         reason: string;
-        mode?: "ai" | "fallback";
-        debug?: { status?: number; code?: string; message?: string };
       };
 
       setResult({
@@ -101,15 +95,6 @@ export function AISwapAssistant() {
         confidence: data.confidence,
         reason: data.reason
       });
-
-      setAiMode(data.mode ?? null);
-      if (data.mode === "fallback" && data.debug) {
-        const parts = [
-          data.debug.status ? `status=${data.debug.status}` : null,
-          data.debug.code ? `code=${data.debug.code}` : null
-        ].filter(Boolean);
-        setAiDebug(parts.length ? `OpenAI error (${parts.join(", ")}). Add credits/billing or use a key with quota.` : null);
-      }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Analyze failed");
     } finally {
@@ -214,11 +199,6 @@ export function AISwapAssistant() {
       {result && (
         <div className="mt-5">
           <ResultCard result={result} />
-          {aiMode === "fallback" && (
-            <div className="mt-2 text-xs text-white/50">
-              AI mode: fallback. {aiDebug ?? "OpenAI request failed (check key/quota) — showing a deterministic result."}
-            </div>
-          )}
         </div>
       )}
     </Card>

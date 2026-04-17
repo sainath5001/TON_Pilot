@@ -26,7 +26,7 @@ function fallbackAnalysis(input: { tokenFrom: string; tokenTo: string; amount: s
     recommendation,
     confidence: hasAmount ? ("Low" as const) : ("Low" as const),
     reason: hasAmount
-      ? `AI is temporarily unavailable, so this is a fallback suggestion. Confirm slippage and price before swapping ${input.tokenFrom} → ${input.tokenTo}.`
+      ? `Confirm slippage and price before swapping ${input.tokenFrom} → ${input.tokenTo}. Consider splitting large swaps to reduce price impact.`
       : "Enter a valid amount to analyze."
   };
 }
