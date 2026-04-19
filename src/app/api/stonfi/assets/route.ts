@@ -1,6 +1,9 @@
 import { AssetTag, StonApiClient } from "@ston-fi/api";
 export const runtime = "nodejs";
 
+// Mainnet TON pseudo-asset address used by STON.fi API
+export const TON_ASSET_ADDRESS = "EQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM9c";
+
 function pickSymbol(asset: { meta?: { symbol?: string; displayName?: string } }) {
   const s = asset.meta?.symbol ?? asset.meta?.displayName ?? "";
   return s.toUpperCase();
