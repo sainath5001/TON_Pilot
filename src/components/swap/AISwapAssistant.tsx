@@ -149,15 +149,19 @@ export function AISwapAssistant() {
 
   return (
     <Card className="mx-auto w-full max-w-xl">
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <div className="text-sm font-semibold text-white">AI Swap Assistant</div>
-          <div className="mt-0.5 text-xs text-white/60">STON.fi swap + mocked recommendation</div>
+          <p className="mt-1 max-w-[20rem] text-xs leading-relaxed text-white/55">
+            Live quotes on STON.fi—pause for a quick read, then sign when it feels right.
+          </p>
         </div>
-        <TonConnectButton />
+        <div className="shrink-0 sm:pt-0.5">
+          <TonConnectButton />
+        </div>
       </div>
 
-      <div className="mt-5 grid gap-4 md:grid-cols-2">
+      <div className="mt-6 grid gap-4 md:grid-cols-2">
         <TokenSelector labelText="From" value={from} options={assets ?? []} onChange={setFrom} />
         <TokenSelector labelText="To" value={to} options={assets ?? []} onChange={setTo} />
       </div>

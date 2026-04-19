@@ -1,23 +1,24 @@
 import { Container } from "@/components/layout/Container";
+import Image from "next/image";
 import Link from "next/link";
 
 export function AppHeader() {
   return (
-    <header className="border-b border-white/10 bg-black/10 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-white/10 bg-black/20 backdrop-blur-md">
       <Container>
-        <div className="flex h-14 items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-violet-500/90 to-cyan-400/70 shadow-sm shadow-violet-500/20" />
-            <div className="leading-tight">
-              <div className="text-sm font-semibold text-white">
-                <Link className="hover:text-white/90" href="/">
-                  TON Pilot
-                </Link>
-              </div>
-              <div className="text-xs text-white/60">Hackathon MVP</div>
-            </div>
-          </div>
-          <nav className="flex items-center gap-4 text-sm text-white/70">
+        <div className="flex h-14 items-center justify-between md:h-16">
+          <Link className="flex items-center gap-2.5" href="/">
+            <Image
+              src="/logo.svg"
+              alt=""
+              width={32}
+              height={32}
+              className="h-8 w-8 shrink-0 object-contain"
+              priority
+            />
+            <span className="text-sm font-semibold text-white hover:text-white/90">TON Pilot</span>
+          </Link>
+          <nav className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1 text-sm text-white/70 md:gap-x-5">
             <Link className="hover:text-white" href="/swap">
               Swap Assistant
             </Link>

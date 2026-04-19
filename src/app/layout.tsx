@@ -4,7 +4,7 @@ import { Providers } from "@/app/providers";
 
 export const metadata: Metadata = {
   title: "TON Pilot",
-  description: "Hackathon MVP starter on TON"
+  description: "Swap, liquidity insights, and alerts on TON"
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

@@ -7,23 +7,27 @@ export default function Home() {
   return (
     <div className="min-h-dvh">
       <AppHeader />
-      <main className="py-14">
+      <main className="py-16 md:py-20">
         <Container>
-          <div className="mx-auto max-w-2xl text-center">
-            <p className="text-xs font-medium tracking-widest text-white/60">STON.fi Vibe Coding Hackathon</p>
-            <h1 className="mt-3 text-balance text-4xl font-semibold leading-tight text-white md:text-5xl">
+          <div className="mx-auto max-w-3xl text-center">
+            <h1 className="text-balance text-4xl font-semibold leading-[1.08] tracking-tight text-white md:text-6xl md:leading-[1.06]">
               TON Pilot
             </h1>
-            <p className="mt-4 text-pretty text-base text-white/70 md:text-lg">
-              Hackathon features: Swap Assistant, Limit Orders, Liquidity Advisor, and Smart Alerts.
+            <p className="mx-auto mt-5 max-w-xl text-pretty text-xl font-light leading-snug text-white/75 md:mt-6 md:text-2xl md:leading-snug">
+              Your cockpit for TON—clarity before every swap.
+            </p>
+            <p className="mx-auto mt-8 max-w-xl text-pretty text-[15px] leading-relaxed text-white/50 md:mt-10 md:text-base">
+              Swaps, liquidity insight, limit-style orders, and alerts—one workspace to plan your next move on-chain.
             </p>
           </div>
 
-          <div className="mx-auto mt-10 grid max-w-6xl gap-4 md:grid-cols-4">
+          <div className="mx-auto mt-14 grid max-w-6xl gap-5 sm:gap-6 md:mt-20 md:grid-cols-2 lg:grid-cols-4">
             <Card>
               <Card.Title>AI Swap Assistant</Card.Title>
-              <Card.Description>Connect Tonkeeper, analyze a swap, and prepare a STON.fi transaction.</Card.Description>
-              <div className="mt-4">
+              <Card.Description>
+                Quote routes, get a quick read, and prepare your trade before you sign.
+              </Card.Description>
+              <div className="mt-5">
                 <Button href="/swap" variant="secondary">
                   Open Swap Assistant
                 </Button>
@@ -31,8 +35,10 @@ export default function Home() {
             </Card>
             <Card>
               <Card.Title>Limit Orders</Card.Title>
-              <Card.Description>Create target-price orders stored in localStorage (no blockchain yet).</Card.Description>
-              <div className="mt-4">
+              <Card.Description>
+                Set target prices and keep a clean local order list as you iterate.
+              </Card.Description>
+              <div className="mt-5">
                 <Button href="/limit-orders" variant="secondary">
                   Open Limit Orders
                 </Button>
@@ -40,8 +46,10 @@ export default function Home() {
             </Card>
             <Card>
               <Card.Title>AI Liquidity Advisor</Card.Title>
-              <Card.Description>Browse pools with APY + risk and get a quick recommendation (mocked).</Card.Description>
-              <div className="mt-4">
+              <Card.Description>
+                Compare pools by APY and risk, then get a concise recommendation.
+              </Card.Description>
+              <div className="mt-5">
                 <Button href="/liquidity-advisor" variant="secondary">
                   Open Liquidity Advisor
                 </Button>
@@ -49,8 +57,10 @@ export default function Home() {
             </Card>
             <Card>
               <Card.Title>Smart Alerts</Card.Title>
-              <Card.Description>Enable alerts and set thresholds (saved to localStorage).</Card.Description>
-              <div className="mt-4">
+              <Card.Description>
+                Tune thresholds and get timely nudges—preferences saved on this device.
+              </Card.Description>
+              <div className="mt-5">
                 <Button href="/smart-alerts" variant="secondary">
                   Open Smart Alerts
                 </Button>
@@ -62,4 +72,3 @@ export default function Home() {
     </div>
   );
 }
-

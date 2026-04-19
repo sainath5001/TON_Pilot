@@ -1,24 +1,20 @@
 import { AppHeader } from "@/components/layout/AppHeader";
 import { Container } from "@/components/layout/Container";
+import { PageHero } from "@/components/layout/PageHero";
 import { AiLiquidityAdvisor } from "@/components/liquidity/AiLiquidityAdvisor";
 
 export default function LiquidityAdvisorPage() {
   return (
     <div className="min-h-dvh">
       <AppHeader />
-      <main className="py-14">
+      <main className="py-16 md:py-20">
         <Container>
-          <div className="mx-auto max-w-2xl text-center">
-            <p className="text-xs font-medium tracking-widest text-white/60">Feature</p>
-            <h1 className="mt-3 text-balance text-4xl font-semibold leading-tight text-white md:text-5xl">
-              AI Liquidity Advisor
-            </h1>
-            <p className="mt-4 text-pretty text-base text-white/70 md:text-lg">
-              Compare pools by APY and risk, then get a quick recommendation (mocked).
-            </p>
-          </div>
+          <PageHero
+            title="AI Liquidity Advisor"
+            subtitle="Pools and trade-offs at a glance—let context guide where you add liquidity."
+          />
 
-          <div className="mt-10">
+          <div className="mt-12 md:mt-14">
             <AiLiquidityAdvisor />
           </div>
         </Container>
@@ -26,4 +22,3 @@ export default function LiquidityAdvisorPage() {
     </div>
   );
 }
-
