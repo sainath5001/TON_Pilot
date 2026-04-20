@@ -68,7 +68,7 @@ export function AiLiquidityAdvisor() {
         <div className="flex items-start justify-between gap-4">
           <div>
             <Card.Title>Liquidity Pools</Card.Title>
-            <Card.Description>Mock dataset with DeFi dashboard styling.</Card.Description>
+            <Card.Description>Curated pool snapshots with APY ranges and risk notes.</Card.Description>
           </div>
           <Button onClick={onRecommend} disabled={loading}>
             {loading ? "Thinking..." : "Get AI Recommendation"}
